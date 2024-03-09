@@ -1,4 +1,15 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['user_login'])) {
+    header('Location: login.php');
+    exit;
+} elseif ($_SESSION['user_login']['admin'] !== 1) {
+    header('Location: unauthorized.php');
+    exit; 
+} else {
+    session_write_close();
+}
 
 require_once('header.php');
 
@@ -148,7 +159,7 @@ $users = $userDTO->getAll();
                         <button type="button" class="btn btn-sm btn-danger" data-mdb-ripple-init data-mdb-modal-init data-mdb-target="#exampleModal2_<?php echo $user['id']; ?>">
                             <i class="fa-solid fa-trash"></i>
                         </button>
-
+                        
                         <div class="modal fade" id="exampleModal2_<?php echo $user['id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
@@ -159,7 +170,7 @@ $users = $userDTO->getAll();
                                 <div class="modal-body">Sei sicuro di eliminare l'utente?</div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-mdb-ripple-init data-mdb-dismiss="modal">Chiudi</button>
-                                    <form method="post" action="controller.php?action=delete">
+                                    <form method="post" action="controller.php?action=delete&id=<?= $user['id'] ?>">
                                         <button type="submit" class="btn btn-danger" data-mdb-ripple-init>Elimina</button>
                                     </form>
                             </div>
